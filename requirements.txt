@@ -3,6 +3,6 @@ chex
 optax
 equinox
 flax        # use flax or equinox
-
+imageio
 numpy
 pygame

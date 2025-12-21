@@ -61,7 +61,7 @@ class RoboTaxiEnv(BaseEnv):
     def step(
         key: chex.PRNGKey,
         env_state: BaseEnvState,
-        action: chex.Scalar | chex.Array,
+        action: chex.Array,  # (2,)
         env_params: BaseEnvParams,
     ) -> Tuple[
         chex.Array, RoboTaxiState, chex.Scalar | chex.Array, chex.Scalar | chex.Array, Dict[Any, Any]
@@ -76,7 +76,7 @@ class RoboTaxiEnv(BaseEnv):
 
         velocity = env_state.velocity + acc * dt
         velocity *= (1.0 - friction)
-        velocity = jnp.clip(velocity, max_speed, -max_speed) # ppo 
+        velocity = jnp.clip(velocity, -max_speed, max_speed) # ppo 
 
         heading = env_state.heading + steer * dt
 

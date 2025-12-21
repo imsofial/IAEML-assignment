@@ -21,8 +21,10 @@ YELLOW = (200, 200, 50)
 # TODO: draw time
 
 class PygameFrontend:
-    def __init__(self, env, env_params, init_state, eval_mode=False, agent_fn=None):
+    def __init__(self, env, env_params, init_state, eval_mode=False, agent_fn=None,record=False):
         pygame.init()
+        self.record = record
+        self.frames = []
         self.env = env
         self.params = env_params
         self.init_state = init_state
@@ -231,6 +233,11 @@ class PygameFrontend:
 
     def run(self):
         while self.running:
+            if self.record:
+                frame = pygame.surfarray.array3d(self.screen)
+                frame = frame.transpose(1, 0, 2)
+                self.frames.append(frame)
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
@@ -249,5 +256,9 @@ class PygameFrontend:
 
             self.draw()
             self.clock.tick(FPS)
+        if self.record:
+            import imageio
+            imageio.mimsave("robotaxi_eval.gif", self.frames, fps=30)
+            print("Video saved to robotaxi_eval.gif")
 
         pygame.quit()
